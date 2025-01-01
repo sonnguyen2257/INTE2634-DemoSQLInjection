@@ -61,7 +61,7 @@ def vuln():
 
 @app.route("/login",methods=["GET"])
 def loginPage():
-    return "<html><body><form action='/login' method='post'>Username: <input type='text' name='username'><br>Password: <input type='password' name='password'><br><input type='submit' value='Login'></form></body></html>"
+    return render_template("login.html")
 
 @app.route("/login",methods=["POST"])
 def login():
@@ -91,7 +91,7 @@ def login():
                 welcome_user_html = f'<html><body><h1>Welcome back <b style="color:green">{username}</b></h1></body></html>'
                 return welcome_user_html
         else:
-            return render_template("login.html")
+            return '<html>Invalid login <a href="/">click here</a> to return</html>'
     except sqlite3.OperationalError as e:
         print(f"Something went wrong with the query. Exception: {e}")
         bad_response = {"message":"bad query"}
