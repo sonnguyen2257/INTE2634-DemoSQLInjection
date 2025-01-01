@@ -20,7 +20,7 @@ def init_db():
     )
     """)
     cursor.execute("""
-        CREATE TABLE IF NOT EXIST shoppinglist (
+        CREATE TABLE IF NOT EXISTS shoppinglist (
                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                    things TEXT NOT NULL,
                    type TEXT NOT NULL
