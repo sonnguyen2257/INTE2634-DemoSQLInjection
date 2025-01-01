@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Search Website</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: black;
+            color:grey;
+        }
+        .container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .search-bar {
+            width: 300px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+        div {
+            margin-top: 20px;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <script>
+        const searchHandlder = async function() {
+            const search = document.querySelector('.search-bar');
+            const results = document.querySelector('.search-results');
+            const searchvalue = search.value;
+            const seareAPI = window.location.href + 'api?q=' + searchvalue;
+
+            console.log(seareAPI);
+            const response = await fetch(seareAPI, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            if (!response.ok) {
+                results.innerHTML = "NA";
+                results.style.color = 'red';
+                return;
+            } else {
+                const data = await response.json();
+                results.innerHTML = JSON.stringify(data);
+                results.style.color = 'green';
+            }
+        };
+    </script>
+    <div class="container">
+        <div>
+            <input type="text" class="search-bar" onchange="searchHandlder()" placeholder="Search..."/>
+            <div class="search-results"></div>
+        </div>
+        
+    </div>
+</body>
+</html>
