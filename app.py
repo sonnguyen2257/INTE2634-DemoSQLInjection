@@ -19,6 +19,13 @@ def init_db():
         password TEXT NOT NULL
     )
     """)
+    cursor.execute("""
+        CREATE TABLE IF NOT EXIST shoppinglist (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   things TEXT NOT NULL,
+                   type TEXT NOT NULL
+                   )
+    """)
     # Add some sample data
     cursor.execute("INSERT OR IGNORE INTO users (username, password) VALUES ('intruder', '083a301369cd711e9803f7d90d342a3778f9cb864ab22992b49fccddc3b9256c')")
     conn.commit()
