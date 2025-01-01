@@ -30,7 +30,7 @@ def home():
     return render_template("login.html")
 
 # Vulnerable endpoint
-@app.route("/vuln", methods=["GET"])
+@app.route("/api", methods=["GET"])
 def vuln():
     username = request.args.get("username")
     conn = sqlite3.connect("test.db")
@@ -59,9 +59,9 @@ def vuln():
         return jsonify({"message": "Bad query syntax."}), 400
 
 
-@app.route("/login",methods=["GET"])
-def loginPage():
-    return render_template("login.html")
+# @app.route("/login",methods=["GET"])
+# def loginPage():
+#     return render_template("login.html")
 
 @app.route("/login",methods=["POST"])
 def login():
