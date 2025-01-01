@@ -1,4 +1,5 @@
-from flask import Flask, request, jsonify
+from flask import Flask, request, jsonify,render_template
+import hashlib
 import sqlite3,os
 
 if "test.db" in os.listdir():
@@ -19,14 +20,14 @@ def init_db():
     )
     """)
     # Add some sample data
-    cursor.execute("INSERT OR IGNORE INTO users (username, password) VALUES ('admin', '083a301369cd711e9803f7d90d342a3778f9cb864ab22992b49fccddc3b9256c')")
-    cursor.execute("INSERT OR IGNORE INTO users (username, password) VALUES ('user123', 'userpassword')")
+    cursor.execute("INSERT OR IGNORE INTO users (username, password) VALUES ('intruder', '083a301369cd711e9803f7d90d342a3778f9cb864ab22992b49fccddc3b9256c')")
     conn.commit()
     conn.close()
 
 @app.route("/")
 def home():
-    return "Welcome to the Vulnerable Flask App! Test SQL injection at /vuln."
+    # return "Welcome to the Vulnerable Flask App! Test SQL injection at /vuln."
+    return render_template("login.html")
 
 # Vulnerable endpoint
 @app.route("/vuln", methods=["GET"])
@@ -66,26 +67,37 @@ def loginPage():
 def login():
     username = request.form["username"]
     password = request.form["password"]
+
+    # convert password to sha256 hash  
+    if not isinstance(password, str):
+        password = str(password)
+    password = hashlib.sha256(password.encode()).hexdigest()
+    print(f"Hashed password: {password}")
+
+    # Connect to the database
     conn = sqlite3.connect("test.db")
     cursor = conn.cursor()
+
     # Deliberately vulnerable query (string concatenation instead of parameterized query)
-    query = f"SELECT * FROM users WHERE username = '{username}' AND password = '{password}'"
-    print(f"Executing query: {query}") 
+    query = f"SELECT * FROM users WHERE username = '{username}'"
+
     try:
         cursor.execute(query)
         rows = cursor.fetchall()
-        conn.close()
+        if rows:
+            retrieved_password = rows[0][2]
+            print(f"Retrieved password: {retrieved_password}")
+            if password == retrieved_password:
+                welcome_user_html = f'<html><body><h1>Welcome back <b style="color:green">{username}</b></h1></body></html>'
+                return welcome_user_html
+        else:
+            return render_template("login.html")
     except sqlite3.OperationalError as e:
         print(f"Something went wrong with the query. Exception: {e}")
         bad_response = {"message":"bad query"}
         conn.close()
         return bad_response 
 
-
-    if rows:
-        return jsonify(rows)
-    else:
-        return jsonify("No users found."),404
 
 if __name__ == "__main__":
     init_db()
