@@ -17,7 +17,7 @@ def init_db():
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL,
         password TEXT NOT NULL,
-        hashed_passwd TEXT NOT NULL,
+        hashed_passwd TEXT NOT NULL
     )
     """)
     cursor.execute("""
