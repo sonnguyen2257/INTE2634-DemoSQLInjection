@@ -100,6 +100,8 @@ def login():
             if password == retrieved_password:
                 welcome_user_html = f'<html><body><h1>Welcome back <b style="color:green">{username}</b></h1></body></html>'
                 return welcome_user_html
+            else:
+                return '<html>Invalid login <a href="/">click here</a> to return</html>'
         else:
             return '<html>Invalid login <a href="/">click here</a> to return</html>'
     except sqlite3.OperationalError as e:
