@@ -94,8 +94,8 @@ def login():
     try:
         cursor.execute(query)
         rows = cursor.fetchall()
-        if rows:
-            retrieved_password = rows[0][2]
+        if rows and len(rows[0]) == 2:
+            retrieved_password = rows[0][3]
             print(f"Retrieved password: {retrieved_password}")
             if password == retrieved_password:
                 welcome_user_html = f'<html><body><h1>Welcome back <b style="color:green">{username}</b></h1></body></html>'
