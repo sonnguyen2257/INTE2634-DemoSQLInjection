@@ -16,7 +16,8 @@ def init_db():
     CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
         username TEXT NOT NULL,
-        password TEXT NOT NULL
+        password TEXT NOT NULL,
+        hashed_passwd TEXT NOT NULL,
     )
     """)
     cursor.execute("""
@@ -27,7 +28,9 @@ def init_db():
                    )
     """)
     # Add some sample data
-    cursor.execute("INSERT OR IGNORE INTO users (username, password) VALUES ('intruder', '083a301369cd711e9803f7d90d342a3778f9cb864ab22992b49fccddc3b9256c')")
+    cursor.execute("INSERT OR IGNORE INTO users (username, password, hashed_passwd) VALUES ('intruder1', 'admin123', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9')")
+    cursor.execute("INSERT OR IGNORE INTO users (username, password, hashed_passwd) VALUES ('intruder2', 's3cure4Passwd@59383a', '008ee9c46305f856b4b98a3c3b9304785ee995bfbf2b38beddd572b54cc658b1')")
+
     conn.commit()
     conn.close()
 
