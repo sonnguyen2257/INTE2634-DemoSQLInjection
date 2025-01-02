@@ -94,7 +94,7 @@ def login():
     try:
         cursor.execute(query)
         rows = cursor.fetchall()
-        if rows and len(rows[0]) == 2:
+        if rows and len(rows[0]) == 4:
             retrieved_password = rows[0][3]
             print(f"Retrieved password: {retrieved_password}")
             if password == retrieved_password:
