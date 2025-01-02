@@ -7,6 +7,15 @@ if "test.db" in os.listdir():
 
 app = Flask(__name__)
 
+def register_account(username, password):
+    conn = sqlite3.connect("test.db")
+    cursor = conn.cursor()
+    hashed_password = hashlib.sha256(password.encode()).hexdigest()
+    cursor.execute("""
+        INSERT INTO users (username, password, hashed_passwd) VALUES (?, ?, ?)
+    """, (username, password, hashed_password))
+    conn.commit()
+
 # Database setup
 def init_db():
     conn = sqlite3.connect("test.db")
@@ -28,12 +37,14 @@ def init_db():
                    )
     """)
     # Add some sample data
-    cursor.execute("INSERT OR IGNORE INTO users (username, password, hashed_passwd) VALUES ('intruder1', 'admin123', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9')")
-    cursor.execute("INSERT OR IGNORE INTO users (username, password, hashed_passwd) VALUES ('intruder2', 's3cure4Passwd@59383a', '008ee9c46305f856b4b98a3c3b9304785ee995bfbf2b38beddd572b54cc658b1')")
-
+    # cursor.execute("INSERT OR IGNORE INTO users (username, password, hashed_passwd) VALUES ('intruder1', 'admin123', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9')")
+    # cursor.execute("INSERT OR IGNORE INTO users (username, password, hashed_passwd) VALUES ('intruder2', 's3cure4Passwd@59383a', '008ee9c46305f856b4b98a3c3b9304785ee995bfbf2b38beddd572b54cc658b1')")
     conn.commit()
     conn.close()
 
+    register_account('intruder1', 'admin123')
+    register_account('intruder2', 's3cure4Passwd@59383a')
+    
 @app.route("/")
 def home():
     # return "Welcome to the Vulnerable Flask App! Test SQL injection at /vuln."
