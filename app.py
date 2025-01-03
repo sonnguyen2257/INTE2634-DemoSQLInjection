@@ -7,6 +7,7 @@ if "test.db" in os.listdir():
 
 app = Flask(__name__)
 
+# Register function
 def register_account(username, password):
     conn = sqlite3.connect("test.db")
     cursor = conn.cursor()
@@ -20,6 +21,7 @@ def register_account(username, password):
 def init_db():
     conn = sqlite3.connect("test.db")
     cursor = conn.cursor()
+
     # Create a basic users table
     cursor.execute("""
     CREATE TABLE IF NOT EXISTS users (
@@ -36,15 +38,14 @@ def init_db():
                    type TEXT NOT NULL
                    )
     """)
-    # Add some sample data
-    # cursor.execute("INSERT OR IGNORE INTO users (username, password, hashed_passwd) VALUES ('intruder1', 'admin123', '240be518fabd2724ddb6f04eeb1da5967448d7e831c08c8fa822809f74c720a9')")
-    # cursor.execute("INSERT OR IGNORE INTO users (username, password, hashed_passwd) VALUES ('intruder2', 's3cure4Passwd@59383a', '008ee9c46305f856b4b98a3c3b9304785ee995bfbf2b38beddd572b54cc658b1')")
+ 
     conn.commit()
     conn.close()
 
     register_account('intruder1', 'admin123')
     register_account('intruder2', 's3cure4Passwd@59383a')
-    
+
+# Main route
 @app.route("/")
 def home():
     # return "Welcome to the Vulnerable Flask App! Test SQL injection at /vuln."
